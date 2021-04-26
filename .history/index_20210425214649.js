@@ -1,13 +1,18 @@
 const fs = require('fs')
 const csv = require('csv-parser')
 const  files = fs.readdirSync('csvFiles')
-const fileData =  (file) => {
+const fileData =  (file, type) => {
       const data = []
       return new Promise((resolve, reject)=>{
             fs.createReadStream(`csvFiles/${file}`)
-            .on ('error', error => reject(error)).pipe(csv())
+            .on ('error', error =>{
+                  reject(error)
+            })
+            .pipe(csv())
             .on('data', (input) => data.push(input))
-            .on('end', () =>  resolve(data))
+            .on('end', () => {
+             resolve(data);
+          });
       })
 }
 async function getData (){
@@ -19,7 +24,7 @@ async function getData (){
                   data[file] = await fileData(file)
             }
       }catch{
-            return 'There is an error in processing this file! '
+            return 'There is any error processing this file! '
       }
       console.log('data',data)
       return data
