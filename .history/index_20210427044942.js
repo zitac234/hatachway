@@ -73,7 +73,7 @@ const getCourseAverage = async (studentId) => {
             console.log('value',value)
             let sum = value.reduce((total, amount) => total + amount)
             getStudentCourses.forEach(obj => {
-                  if(key === obj['id'])obj.courseAverage = sum.toFixed( 1)
+                  if(key === obj['id'])obj.courseAverage =sum.toFixed( 1)
             })
       }
       console.log('studentCourses', getStudentCourses)

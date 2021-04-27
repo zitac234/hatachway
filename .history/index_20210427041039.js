@@ -30,8 +30,8 @@ const getStudentMark = async (studentId) =>{
       let  [data, includeObj ] = [await getData(), {}]
       data['courses.csv'].forEach(course => includeObj[course.id] = true)
       let studentMark = data['marks.csv'].filter(mark => mark.student_id === studentId)
-      console.log('data', data)
-      console.log('studentMark', studentMark)
+      // console.log('data', data)
+      // console.log('studentMark', studentMark)
       return studentMark
 }
 const  getStudentCourse = async (studentId) => {
@@ -57,26 +57,18 @@ const  getStudentCourse = async (studentId) => {
 const getCourseAverage = async (studentId) => {
       let getStudentCourses = await getStudentCourse(studentId) 
       let [studentMark, data, gradeObj] = [await getStudentMark (studentId), await getData(), {}]
+      // getStudentCourses.forEach(obj => obj.courseAverage = 0)
       studentMark.forEach(obj => {
             let testIndx = obj.test_id - 1
             let weight = ((data['tests.csv'][testIndx]['weight'])/100)
-            let courseId = data['tests.csv'][testIndx]['course_id']
-            let rawGrade = weight*obj.mark
-            if(gradeObj[courseId]){
-                  gradeObj[courseId].push(rawGrade)
+            let rawGrade = (weight*obj.mark).toFixed(2)
+            console.log('obj.course_id',obj.course_id)
+            if(gradeObj[obj.course_id]){
+                  gradeObj[obj.course_id].push(rawGrade)
             }else{
-                  gradeObj[courseId] = [rawGrade]
+                  gradeObj[obj.course_id] = [rawGrade]
             }
       })
-      for(let key in gradeObj){
-            let value = gradeObj[key]
-            console.log('value',value)
-            let sum = value.reduce((total, amount) => total + amount)
-            getStudentCourses.forEach(obj => {
-                  if(key === obj['id'])obj.courseAverage = sum.toFixed( 1)
-            })
-      }
-      console.log('studentCourses', getStudentCourses)
       console.log(gradeObj)
 }
 // const getCourseScore = async (studentId) =>{

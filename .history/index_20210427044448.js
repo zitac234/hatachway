@@ -71,9 +71,12 @@ const getCourseAverage = async (studentId) => {
       for(let key in gradeObj){
             let value = gradeObj[key]
             console.log('value',value)
-            let sum = value.reduce((total, amount) => total + amount)
+            let result = value.reduce((acc, val)=> {
+                  acc  +  val
+            },0)
+            console.log('result', typeof result)
             getStudentCourses.forEach(obj => {
-                  if(key === obj['id'])obj.courseAverage = sum.toFixed( 1)
+                  if(key === obj['id'])obj.courseAverage = result
             })
       }
       console.log('studentCourses', getStudentCourses)

@@ -34,7 +34,8 @@ const getStudentMark = async (studentId) =>{
       console.log('studentMark', studentMark)
       return studentMark
 }
-const  getStudentCourse = async (studentId) => {
+
+const  getStudentCourses = async (studentId) => {
       let [courseIdObj, studentCourses] = [{}, []]
       let [studentMark, data] =  [await getStudentMark (studentId), await getData()]
       let testId = studentMark.map(obj => obj.test_id)
@@ -49,35 +50,18 @@ const  getStudentCourse = async (studentId) => {
                   studentCourses.push (data['courses.csv'][courseIndx])
             }
       })
-      // console.log('testId', testId)
-      // console.log('studentCourses',studentCourses)
+      console.log('testId', testId)
+      console.log('studentCourses',studentCourses)
       return studentCourses
 }
-
 const getCourseAverage = async (studentId) => {
-      let getStudentCourses = await getStudentCourse(studentId) 
-      let [studentMark, data, gradeObj] = [await getStudentMark (studentId), await getData(), {}]
+      let [studentMark, data ] = [await getStudentMark (studentId), await getData()]
+      let getStudentCourses = await getStudentCourses(studentId) 
+      let testId = studentMark.map(obj => obj.test_id)
+      // getStudentCourses.forEach(obj => obj.courseAverage = 0)
       studentMark.forEach(obj => {
-            let testIndx = obj.test_id - 1
-            let weight = ((data['tests.csv'][testIndx]['weight'])/100)
-            let courseId = data['tests.csv'][testIndx]['course_id']
-            let rawGrade = weight*obj.mark
-            if(gradeObj[courseId]){
-                  gradeObj[courseId].push(rawGrade)
-            }else{
-                  gradeObj[courseId] = [rawGrade]
-            }
+            let testIndx = 
       })
-      for(let key in gradeObj){
-            let value = gradeObj[key]
-            console.log('value',value)
-            let sum = value.reduce((total, amount) => total + amount)
-            getStudentCourses.forEach(obj => {
-                  if(key === obj['id'])obj.courseAverage = sum.toFixed( 1)
-            })
-      }
-      console.log('studentCourses', getStudentCourses)
-      console.log(gradeObj)
 }
 // const getCourseScore = async (studentId) =>{
 //       let data = await getData()
@@ -98,6 +82,6 @@ const getCourseAverage = async (studentId) => {
 //       console.group('courseWeight',courseWeight)
 //       console.log('studentCourses',studentCourses)
 // }
-getCourseAverage(2)
+getStudentCourses(2)
 
 
